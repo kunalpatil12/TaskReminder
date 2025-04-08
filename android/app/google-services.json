@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "7912643175",
+    "project_id": "blogapp-9e685",
+    "storage_bucket": "blogapp-9e685.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7912643175:android:f5dd879eef7f441a2512c2",
+        "android_client_info": {
+          "package_name": "com.crudapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl8jNBODIPUZBzAy-GkZUwplozWXg-wQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

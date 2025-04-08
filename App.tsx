@@ -1,131 +1,157 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
+// import React from 'react';
+// import type {PropsWithChildren} from 'react';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import { StyleSheet, View } from 'react-native';
+// import Login from './src/screen/Login';
+// import HomeScreen from './src/screen/HomeScreen';
+// import Register from './src/screen/Register';
+
+
+// function App(): React.JSX.Element {
+
+// const Stack=createStackNavigator();
+
+//   return (
+//    <NavigationContainer>
+//     <Stack.Navigator initialRouteName='Login'>
+//     <Stack.Screen name="Login" component={Login}/>
+//     <Stack.Screen name="Register" component={Register} />
+//     <Stack.Screen name="Home" component={HomeScreen}/>
+
+
+//     </Stack.Navigator>
+
+//    </NavigationContainer>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   sectionContainer: {
+//     marginTop: 32,
+//     paddingHorizontal: 24,
+//   },
+//   sectionTitle: {
+//     fontSize: 24,
+//     fontWeight: '600',
+//   },
+//   sectionDescription: {
+//     marginTop: 8,
+//     fontSize: 18,
+//     fontWeight: '400',
+//   },
+//   highlight: {
+//     fontWeight: '700',
+//   },
+// });
+
+// export default App;
+
+
+// import React from 'react';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import Login from './src/screen/Login';
+// import Register from './src/screen/Register';
+// import HomeScreen from './src/screen/HomeScreen';
+// import AddUserScreen  from './src/screen/AddUserScreen';
+
+// import UserListScreen from './src/screen/UserListScreen';
+// import EditUserScreen from './src/screen/EditUserScreen';
+// import ForgotPassword from './src/screen/ForgotPassword';
+
+// const Stack = createStackNavigator();
+
+// function App() {
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator initialRouteName="Home" >
+//         {/* <Stack.Screen name="Login" component={Login} options={
+//           {headerShown:false,}
+//         }/>
+//         <Stack.Screen name="Register" component={Register} options={
+//           {headerShown:false,}
+//         } />
+//          <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={
+//           {headerShown:false,}
+//         } /> */}
+//         <Stack.Screen name="Home" component={HomeScreen} options={
+//           {headerShown:false,}
+//         }/>
+
+// <Stack.Screen name="UserListScreen" component={UserListScreen} />
+//         <Stack.Screen name="AddUser" component={AddUserScreen} />
+//         <Stack.Screen name="EditUser" component={EditUserScreen} />
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// }
+
+// export default App;
+
+
+
+
+// App.tsx
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { ActivityIndicator, View } from 'react-native';
+import { AuthProvider, useAuth } from './src/context/AuthContext';
+import Login from './src/screen/Login';
+import Register from './src/screen/Register';
+import HomeScreen from './src/screen/HomeScreen';
+import AddUserScreen from './src/screen/AddUserScreen';
+import UserListScreen from './src/screen/UserListScreen';
+import EditUserScreen from './src/screen/EditUserScreen';
+import ForgotPassword from './src/screen/ForgotPassword';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createStackNavigator();
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+const AuthStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Register" component={Register} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+  </Stack.Navigator>
+);
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const AppStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen 
+      name="Home" 
+      component={HomeScreen} 
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen name="UserListScreen" component={UserListScreen} />
+    <Stack.Screen name="AddUser" component={AddUserScreen} />
+    <Stack.Screen name="EditUser" component={EditUserScreen} />
+  </Stack.Navigator>
+);
+
+const RootNavigator = () => {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return user ? <AppStack /> : <AuthStack />;
+};
+
+function App() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <AuthProvider>
+      <NavigationContainer>
+        <RootNavigator />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the reccomendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
-
-  return (
-    <View style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        style={backgroundStyle}>
-        <View style={{paddingRight: safePadding}}>
-          <Header/>
-        </View>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            paddingHorizontal: safePadding,
-            paddingBottom: safePadding,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
